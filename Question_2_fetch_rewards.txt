@@ -1,0 +1,71 @@
+
+/* Using Oracle SQL to solve the SQL Questions */
+
+/* 1) What are the top 5 brands by receipts scanned for most recent month? */
+
+select b.name,count(b.name)
+from brand b
+join receipt r 
+	on r.barcode = b.barcode
+where datescanned = sysdate - 30
+and rownum<=5
+group by b.name;
+
+/* 2) How does the ranking of the top 5 brands by receipts scanned for the recent month compare to the ranking for the previous month? */
+
+select b.name,count(b.name)
+from brand b
+join receipt r 
+	on rr.barcode = b.barcode
+where datescanned = sysdate - 30
+and rownum<=5
+group by b.name;
+
+select b.name,count(b.name)
+from brand b
+join receipt r 
+	on rr.barcode = b.barcode
+where datescanned = between sysdate - 30 and sysdate - 60
+and rownum<=5
+group by b.name;
+
+/* 3) When considering average spend from receipts with 'rewardsReceiptStatus’ of ‘Accepted’ or ‘Rejected’, which is greater? */
+
+select rewardsReceiptStatus,avg(totalspent)
+from receipt 
+group by rewardsReceiptStatus;
+
+/* 4) When considering total number of items purchased from receipts with 'rewardsReceiptStatus’ of ‘Accepted’ or ‘Rejected’, which is greater? */
+
+select rewardsReceiptStatus,avg(purchasedItemCount)
+from receipt 
+group by rewardsReceiptStatus;
+
+/* 5) Which brand has the most spend among users who were created within the past 6 months? */
+
+select b.name, sum(rr.itemprice)
+from brand b
+join rewardsReceipritemlist rr
+	on b.barcode = rr.barcode
+join receipt r 
+	on r._id = rr.receipt_id
+where user_id = (select u._id from user u where createddate > (sysdate - 183))
+and rownum = 1
+order by sum(rr.itemprice) desc
+
+/* 6) Which brand has the most transactions among users who were created within the past 6 months? */
+
+select b.name, count(r._id)
+from brand b
+join receipt r 
+	on r.barcode = b.barcode
+where user_id = (select u._id from user u where createddate > (sysdate - 183))
+and rownum = 1
+group by b.name
+order by count(r._id) desc;
+
+
+
+
+
+

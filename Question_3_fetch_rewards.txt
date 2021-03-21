@@ -1,0 +1,20 @@
+
+## Finding Data Qualtiy Issues Using Python 3 programming language  
+
+## Reading the files
+
+receipts= pd.read_json('receipts.json.gz', compression='gzip',lines=True)
+user = pd.read_json('users.json.gz',compression='gzip',lines=True)
+brand= pd.read_json('brands.json.gz',compression='gzip',lines=True)
+
+## Finding the Null Values in each column
+
+receipts.isnull().sum()
+user.isnull().sum()
+brand.isnull().sum()
+
+## Finding the Duplicated Rows/ Values in each column 
+
+receipts[''].duplicated().sum()       ## insert different column of receipts table in ' ' to find the duplicates
+user[''].duplicated().sum()           ## insert different column of user table in ' ' to find the duplicates
+brand[''].duplicated().sum()          ## insert different column of brand table in ' ' to find the duplicates
